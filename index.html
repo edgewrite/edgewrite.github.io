@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Most Dangerous Writing App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f8f8;
+            transition: background-color 1.5s ease-in-out;
+        }
+
+        #textInput {
+            width: 100%;
+            max-width: 800px;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            filter: blur(10px);
+        }
+
+        #timerDisplay {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        select {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>The Most Dangerous Writing App</h1>
+    <div id="timerDisplay">Timer: 00:00</div>
+    <textarea id="textInput" class="hidden" placeholder="Start typing..."></textarea>
+    <div>
+        <label for="mode">Mode:</label>
+        <select id="mode">
+            <option value="hardcore">Hardcore</option>
+            <option value="easy">Easy</option>
+        </select>
+
+        <label for="timer">Timer (minutes):</label>
+        <select id="timer">
+            <option>3</option>
+            <option>5</option>
+            <option>10</option>
+            <option>15</option>
+            <option>20</option>
+        </select>
+        <button onclick="startGame()">Start</button>
+        <button onclick="stopGame()">Stop</button>
+    </div>
+
+    <script>
+        const textInput = document.getElementById("textInput");
+        const timerSelect = document.getElementById("timer");
+        const modeSelect = document.getElementById("mode");
+        const timerDisplay = document.getElementById("timerDisplay");
+        let typingInterval;
+        let countdownInterval;
+        let blackoutInterval;
+        let warningInterval;
+        let timeLeft;
+        let countdown;
+
+        function startGame() {
+            countdown = timerSelect.value * 60;
+            textInput.value = "";
+            textInput.focus();
+            modeSelect.disabled = true;
+
+            textInput.addEventListener("input", resetTypingInterval);
+
+            if (modeSelect.value === "hardcore") {
+                textInput.classList.add("hidden");
+            } else {
+                textInput.classList.remove("hidden");
+            }
+
+            resetTypingInterval();
+            updateTimerDisplay();
+            countdownInterval = setInterval(updateTimer, 1000);
+        }
+
+        function stopGame() {
+            clearInterval(countdownInterval);
+            clearInterval(typingInterval);
+            clearInterval(blackoutInterval);
+            clearInterval(warningInterval);
+            modeSelect.disabled = false;
+            textInput.removeEventListener("input", resetTypingInterval);
+            textInput.classList.remove("hidden");
+            document.body.style.backgroundColor = "#f8f8f8";
+            timerDisplay.style.color = "black";
+        }
+
+        function resetTypingInterval() {
+    clearInterval(typingInterval);
+    clearInterval(blackoutInterval);
+    clearInterval(warningInterval);
+    document.body.style.backgroundColor = "#f8f8f8";
+    timerDisplay.style.color = "black"; // Add this line to change the timer color back to black
+
+    if (modeSelect.value === "easy") {
+        warningInterval = setTimeout(() => {
+            timerDisplay.style.color = "red";
+        }, 1500);
+    }
+
+    blackoutInterval = setTimeout(() => {
+        document.body.style.backgroundColor = "black";
+    }, 3000);
+
+    typingInterval = setTimeout(() => {
+        textInput.value = "";
+        stopGame();
+        startGame();
+    }, 3000);
+}
+
+        function updateTimer() {
+            countdown--;
+            if (countdown < 0) {
+                clearInterval(countdownInterval);
+                clearInterval(typingInterval);
+                clearInterval(blackoutInterval);
+                clearInterval(warningInterval);
+                stopGame();
+            } else {
+                updateTimerDisplay();
+            }
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(countdown / 60);
+            const seconds = countdown % 60;
+            timerDisplay.textContent = `Timer: ${formatNumber(minutes)}:${formatNumber(seconds)}`;
+        }
+
+        function formatNumber(number) {
+            return number.toString().padStart(2, "0");
+        }
+    </script>
+</body>
+</html>
