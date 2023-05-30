@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Most Dangerous Writing App</title>
+    <title>Edge Write</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -106,7 +106,7 @@
     clearInterval(blackoutInterval);
     clearInterval(warningInterval);
     document.body.style.backgroundColor = "#f8f8f8";
-    timerDisplay.style.color = "black"; // Add this line to change the timer color back to black
+    timerDisplay.style.color = "black";
 
     if (modeSelect.value === "easy") {
         warningInterval = setTimeout(() => {
@@ -121,8 +121,13 @@
     typingInterval = setTimeout(() => {
         textInput.value = "";
         stopGame();
-        startGame();
+        resetTimer(); // Reset the timer when the text resets
     }, 3000);
+}
+
+function resetTimer() {
+    countdown = timerSelect.value * 60; // Reset the timer to the original value
+    updateTimerDisplay(); // Update the timer display
 }
 
         function updateTimer() {
