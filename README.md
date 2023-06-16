@@ -8,5 +8,5 @@ In Hardcore mode, the app blurs your text as you type, forcing you to concentrat
 </p>
 
 <p>
-Built to challenge your determination and boost productivity, The Most Dangerous Writing App pushes you to keep writing and maintain a steady flow of thoughts without overthinking or pausing too long. It's daring, it's intense, and it's perfect for those who seek an adventurous way to enhance their writing skills and explore new creative horizons.
+Built to challenge your determination and boost productivity, Edge Write pushes you to keep writing and maintain a steady flow of thoughts without overthinking or pausing too long. It's daring, intense, and perfect for those who seek an adventurous way to enhance their writing skills and explore new creative horizons.
 </p>
