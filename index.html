@@ -6,7 +6,7 @@
     <title>Edge Write</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial, sans-serif; /* Changed font to Arial */
             text-align: center;
             background-color: #f8f8f8;
             transition: background-color 1.5s ease-in-out;
@@ -20,7 +20,7 @@
         }
 
         .hidden {
-            filter: blur(10px);
+            filter: blur(20px);
         }
 
         #timerDisplay {
@@ -36,9 +36,9 @@
     </style>
 </head>
 <body>
-    <h1>Edge Write</h1>
+    <h1>The Most Dangerous Writing App</h1>
     <div id="timerDisplay">Timer: 00:00</div>
-    <textarea id="textInput" class="hidden" placeholder="Start typing..."></textarea>
+    <textarea id="textInput" placeholder="Start typing..."></textarea> <!-- Removed class "hidden" -->
     <div>
         <label for="mode">Mode:</label>
         <select id="mode">
@@ -57,7 +57,6 @@
         <button onclick="startGame()">Start</button>
         <button onclick="stopGame()">Stop</button>
     </div>
-
     <script>
         const textInput = document.getElementById("textInput");
         const timerSelect = document.getElementById("timer");
