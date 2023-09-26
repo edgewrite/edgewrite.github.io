@@ -1,66 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edge Write</title>
     <link rel="stylesheet" type="text/css" href="styles.css" />
-
-</head>
-<body>
-    <h1>Edge Write</h1>
+  </head>
+  <body class="main-content">
+    <header>
+      <h1>Edge Write</h1>
+      <a class="about-link" href="about.html" target="_blank">About</a>
+    </header>
     <div>
-        <input id="promptInput" type="text" placeholder="Enter your prompt here..." style="width: 60%; margin-right: 10px;">
-        <button onclick="savePrompt()">Save Prompt</button>
+      <input id="promptInput" type="text" placeholder="Enter your prompt here..." style="width: 60%; margin-right: 10px;">
+      <button onclick="savePrompt()">Save Prompt</button>
     </div>
     <div id="savedPrompt" style="margin: 20px 0; font-weight: bold;"></div>
     <div id="timerDisplay">Timer: 00:00</div>
     <textarea id="textInput" placeholder="Start typing..."></textarea>
     <div>
-        <label for="mode">Mode:</label>
-        <select id="mode">
-            <option value="easy">Easy</option>
-
-            <option value="hardcore">Hardcore</option>
-            <option value="extreme">Extreme</option>
+      <label for="mode">Mode:</label>
+      <select id="mode">
+        <option value="easy">Easy</option>
+        <option value="hardcore">Hardcore</option>
+        <option value="extreme">Extreme</option>
+      </select>
+      <label for="timer">Timer (minutes):</label>
+      <select id="timer">
+        <option>3</option>
+        <option>5</option>
+        <option>10</option>
+        <option>15</option>
+        <option>20</option>
+      </select>
+      <button onclick="startGame()">Start</button>
+      <button onclick="stopGame()">Stop</button>
+      <div id="themeContainer">
+        <label for="theme">Theme:</label>
+        <select id="theme">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
         </select>
-        
-
-        <label for="timer">Timer (minutes):</label>
-        <select id="timer">
-            <option>3</option>
-            <option>5</option>
-            <option>10</option>
-            <option>15</option>
-            <option>20</option>
-        </select>
-        <button onclick="startGame()">Start</button>
-        <button onclick="stopGame()">Stop</button>
-
-        <div id="themeContainer">
-            <label for="theme">Theme:</label>
-            <select id="theme">
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-            </select>
-        </div>
-                
+      </div>
     </div>
-
+  </body>
+</html>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@700&display=swap');
 
-/* Default (Light Mode) */
+
+/* Global Styles */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f7f9fc;
     transition: background-color 1.5s ease-in-out;
     padding: 20px;
+    color: #333;  /* Setting default text color for light mode */
+}
+
+/* Styling for the main Edge Write page */
+.main-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #333;  /* Setting default text color for light mode */
 }
+
+/* Styling for the About page */
+.about-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* left-aligns the content */
+}
+
 
 h1 {
     font-family: 'Montserrat', sans-serif;
@@ -191,29 +202,101 @@ div#themeContainer {
     filter: blur(100px);
 }
 
+a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 800;
+    margin-right: 20px;
+    font-size: 20px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+.about-container {
+    width: 100%;
+    text-align: right;
+    margin-bottom: 15px;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Make sure to position the "About" link relative to this header */
+    width: 100%;
+    margin-bottom: 25px;  /* Adds space below the header */
+
+}
+
+.about-link {
+    position: absolute; /* Absolute positioning */
+    top: 40%;  /* Center vertically */
+    right: 20px; /* Place it 20px from the right edge */
+    transform: translateY(-50%); /* This will ensure vertical centering */
+}
+
+h1 {
+    margin: 0;
+}
+.left-align {
+    align-items: flex-start; /* This will align items to the left */
+    justify-content: flex-start; /* This will start the content at the top */
+}
+
+/* CSS for the main Edge Write page */
+.main-content {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f9fc;
+    transition: background-color 1.5s ease-in-out;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333;
+}
+
+/* CSS for the About page */
+.about-content {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f9fc;
+    transition: background-color 1.5s ease-in-out;
+    padding: 20px;
+    display: block; /* Resetting the flex settings */
+    color: #333;
+}
+
+.back-link {
+    margin-top: 120px;
+}
+
+#warningText {
+    color: red;
+}
+#funText {
+    color: purple;
+}
 </style>
+<script>
+const textInput = document.getElementById("textInput");
+const timerSelect = document.getElementById("timer");
+const modeSelect = document.getElementById("mode");
+const timerDisplay = document.getElementById("timerDisplay");
+const promptInput = document.getElementById('promptInput');
+const savedPrompt = document.getElementById('savedPrompt');
 
+let typingInterval;
+let countdownInterval;
+let blackoutInterval;
+let warningInterval;
+let timeLeft;
+let countdown;
 
-    <script>
-        const textInput = document.getElementById("textInput");
-        const timerSelect = document.getElementById("timer");
-        const modeSelect = document.getElementById("mode");
-        const timerDisplay = document.getElementById("timerDisplay");
-        const promptInput = document.getElementById('promptInput');
-        const savedPrompt = document.getElementById('savedPrompt');
+function savePrompt() {
+    savedPrompt.innerText = promptInput.value;
+}
 
-        let typingInterval;
-        let countdownInterval;
-        let blackoutInterval;
-        let warningInterval;
-        let timeLeft;
-        let countdown;
-
-        function savePrompt() {
-            savedPrompt.innerText = promptInput.value;
-        }
-
-        function startGame() {
+function startGame() {
     countdown = timerSelect.value * 60;
     textInput.value = "";
     textInput.focus();
@@ -221,13 +304,15 @@ div#themeContainer {
 
     textInput.addEventListener("input", resetTypingInterval);
 
+    // Reset modes
+    textInput.classList.remove("hidden", "blurred");
+    timerDisplay.classList.remove("blurred");
+
     if (modeSelect.value === "hardcore") {
         textInput.classList.add("hidden");
     } else if (modeSelect.value === "extreme") {
         timerDisplay.classList.add("blurred");
-    } else {
-        textInput.classList.remove("hidden");
-        timerDisplay.classList.remove("blurred");
+        textInput.classList.add("blurred"); // Added this line
     }
 
     resetTypingInterval();
@@ -242,64 +327,74 @@ function stopGame() {
     clearInterval(warningInterval);
     modeSelect.disabled = false;
     textInput.removeEventListener("input", resetTypingInterval);
-    textInput.classList.remove("hidden");
-    timerDisplay.classList.remove("blurred");  // Add this line
+    textInput.classList.remove("hidden", "blurred"); // Added "blurred" class removal here
+    timerDisplay.classList.remove("blurred");
     document.body.style.backgroundColor = "#f8f8f8";
     timerDisplay.style.color = "black";
 }
-        function resetTypingInterval() {
-            clearInterval(typingInterval);
-            clearInterval(blackoutInterval);
-            clearInterval(warningInterval);
-            document.body.style.backgroundColor = "#f8f8f8";
-            timerDisplay.style.color = "black";
 
-            if (modeSelect.value === "easy") {
-                warningInterval = setTimeout(() => {
-                    timerDisplay.style.color = "red";
-                }, 1500);
-            }
+function clearTextAndUnblur() {
+    textInput.value = "";
+    textInput.classList.remove("blurred");
+    timerDisplay.classList.remove("blurred");
+    document.body.style.backgroundColor = "#f8f8f8";
+    timerDisplay.style.color = "black";
+}
 
-            blackoutInterval = setTimeout(() => {
-                document.body.style.backgroundColor = "black";
-            }, 3000);
+function resetTypingInterval() {
+    clearInterval(typingInterval);
+    clearInterval(blackoutInterval);
+    clearInterval(warningInterval);
+    document.body.style.backgroundColor = "#f8f8f8";
+    timerDisplay.style.color = "black";
 
-            typingInterval = setTimeout(() => {
-                textInput.value = "";
-                stopGame();
-                resetTimer(); 
-            }, 3000);
-        }
+    if (modeSelect.value === "easy") {
+        warningInterval = setTimeout(() => {
+            timerDisplay.style.color = "red";
+        }, 1500);
+    }
 
-        function resetTimer() {
-            countdown = timerSelect.value * 60; 
-            updateTimerDisplay(); 
-        }
+    blackoutInterval = setTimeout(() => {
+        document.body.style.backgroundColor = "black";
+    }, 3000);
 
-        function updateTimer() {
-            countdown--;
-            if (countdown < 0) {
-                clearInterval(countdownInterval);
-                clearInterval(typingInterval);
-                clearInterval(blackoutInterval);
-                clearInterval(warningInterval);
-                stopGame();
-            } else {
-                updateTimerDisplay();
-            }
-        }
+    typingInterval = setTimeout(() => {
+        clearTextAndUnblur(); // Replaced stopGame with this function
+        resetTimer();
+    }, 3000);
+}
 
-        function updateTimerDisplay() {
-            const minutes = Math.floor(countdown / 60);
-            const seconds = countdown % 60;
-            timerDisplay.textContent = `Timer: ${formatNumber(minutes)}:${formatNumber(seconds)}`;
-        }
 
-        function formatNumber(number) {
-            return number.toString().padStart(2, "0");
-        }
 
-        document.getElementById("theme").addEventListener("change", function() {
+function resetTimer() {
+    countdown = timerSelect.value * 60;
+    updateTimerDisplay();
+}
+
+function updateTimer() {
+    countdown--;
+    if (countdown < 0) {
+        stopGame(); // Moved the stopGame() call to the beginning here
+        clearInterval(countdownInterval);
+        clearInterval(typingInterval);
+        clearInterval(blackoutInterval);
+        clearInterval(warningInterval);
+    } else {
+        updateTimerDisplay();
+    }
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(countdown / 60);
+    const seconds = countdown % 60;
+    timerDisplay.textContent = `Timer: ${formatNumber(minutes)}:${formatNumber(seconds)}`;
+}
+
+function formatNumber(number) {
+    return number.toString().padStart(2, "0");
+}
+
+document.getElementById("theme").addEventListener("change", function() {
     let theme = this.value;
     if (theme === "dark") {
         document.body.setAttribute("data-theme", "dark");
@@ -312,9 +407,7 @@ function stopGame() {
         document.getElementById("promptInput").removeAttribute("data-theme");
         // Remove data-theme attribute from other elements if needed
     }
-});
-
-    </script>
+});    </script>
 </body>
 <h4>Built by NC 😸</h4>
 
